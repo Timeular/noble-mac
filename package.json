@@ -1,0 +1,18 @@
+{
+  "main": "index.js",
+  "dependencies": {
+    "napi-thread-safe-callback": "0.0.6",
+    "noble": "^1.9.1",
+    "node-addon-api": "^1.1.0"
+  },
+  "scripts": {
+    "test": "node --napi-modules ./test/test_binding.js",
+    "xcode": "node-gyp configure --debug -- -f xcode"
+  },
+  "gypfile": true,
+  "name": "noble-mac",
+  "version": "0.0.1",
+  "author": "gv@timeular.com",
+  "license": "MIT",
+  "description": "Noble (Node.js Bluetooth LE) bindings using CoreBluetooth API"
+}
