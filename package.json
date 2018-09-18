@@ -5,6 +5,9 @@
     "noble": "^1.9.1",
     "node-addon-api": "^1.1.0"
   },
+	"engines": {
+		"node": ">=6.14.2"
+  },
   "scripts": {
     "test": "node --napi-modules ./test/test_binding.js",
     "xcode": "node-gyp configure --debug -- -f xcode"

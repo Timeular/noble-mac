@@ -5,6 +5,11 @@ This is error prone, as the protocol needs to be reverse engineered by sniffing 
 bluetooth daemon. Since the protocol is not public Apple can change it at anytime (For now every new OSX release changed the protocol)._
 
 This package provides the same functionality as the regular noble mac bindings using the official [CoreBluetooth API](https://developer.apple.com/documentation/corebluetooth).
+
+## System Requirements
+ * Node.js v6.14.2 or later.
+ * macOS 10.7 or later
+
 ## Prerequisites
 
 ### OS X
