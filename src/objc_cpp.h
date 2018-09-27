@@ -8,13 +8,13 @@
 
 #define IF(type, var, code) type var = code; if(var)
 
-#if __MAC_OS_X_VERSION_MAX_ALLOWED < 1013
-    std::string stateToString(CBCentralManagerState state);
-#else
+#if defined(MAC_OS_X_VERSION_10_13)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"
     std::string stateToString(CBManagerState state);
 #pragma clang diagnostic pop
+#else
+    std::string stateToString(CBCentralManagerState state);
 #endif
 
 
