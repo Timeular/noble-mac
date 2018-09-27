@@ -6,26 +6,7 @@
 //
 #include "objc_cpp.h"
 
-#if __MAC_OS_X_VERSION_MAX_ALLOWED < 1013
-std::string stateToString(CBCentralManagerState state)
-{
-    switch(state) {
-        case CBCentralManagerStatePoweredOff:
-            return "poweredOff";
-        case CBCentralManagerStatePoweredOn:
-            return "poweredOn";
-        case CBCentralManagerStateResetting:
-            return "resetting";
-        case CBCentralManagerStateUnauthorized:
-            return "unauthorized";
-        case CBCentralManagerStateUnknown:
-            return "unknown";
-        case CBCentralManagerStateUnsupported:
-            return "unsupported";
-    }
-    return "unknown";
-}
-#else
+#if defined(MAC_OS_X_VERSION_10_13)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"
 std::string stateToString(CBManagerState state)
@@ -54,7 +35,25 @@ std::string stateToString(CBManagerState state)
 @interface CBPeripheral (HighSierraSDK)
 @property(readonly, nonatomic) NSUUID* identifier;
 @end
-
+#else
+std::string stateToString(CBCentralManagerState state)
+{
+    switch(state) {
+        case CBCentralManagerStatePoweredOff:
+            return "poweredOff";
+        case CBCentralManagerStatePoweredOn:
+            return "poweredOn";
+        case CBCentralManagerStateResetting:
+            return "resetting";
+        case CBCentralManagerStateUnauthorized:
+            return "unauthorized";
+        case CBCentralManagerStateUnknown:
+            return "unknown";
+        case CBCentralManagerStateUnsupported:
+            return "unsupported";
+    }
+    return "unknown";
+}
 #endif
 
 std::string getUuid(CBPeripheral* peripheral) {
