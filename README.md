@@ -1,4 +1,5 @@
 # Noble (Node.js Bluetooth LE) for MacOS
+[![Build Status](https://travis-ci.com/Timeular/noble-mac.svg?branch=master)](https://travis-ci.com/Timeular/noble-mac)
 
 _The mac bindings in the [`noble`](https://github.com/sandeepmistry/noble) repository use a XPC connection and an undocumented protocol to communicate directly with the bluetooth daemon.
 This is error prone, as the protocol needs to be reverse engineered by sniffing the communication between a regular program which uses the official CoreBluetooth API and the 

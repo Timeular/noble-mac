@@ -1,0 +1,74 @@
+os:
+  - osx
+language: node_js
+
+node_js:
+  - "stable"
+
+env:
+  matrix:
+  # node
+  - RUNTIME="node" RVERSION="6.14.2" ARCH="x64"
+  - RUNTIME="node" RVERSION="6.14.2" ARCH="ia32"
+  - RUNTIME="node" RVERSION="8.12.0" ARCH="x64"
+  - RUNTIME="node" RVERSION="8.12.0" ARCH="ia32"
+  - RUNTIME="node" RVERSION="9.11.2" ARCH="x64"
+  - RUNTIME="node" RVERSION="9.11.2" ARCH="ia32"
+  - RUNTIME="node" RVERSION="10.11.0" ARCH="x64"
+  - RUNTIME="node" RVERSION="10.11.0" ARCH="ia32"
+
+  # electron
+  - RUNTIME="electron" RVERSION="2.0.0" ARCH="x64" DIST_URL=https://atom.io/download/atom-shell
+  - RUNTIME="electron" RVERSION="2.0.0" ARCH="ia32" DIST_URL=https://atom.io/download/atom-shell
+  - RUNTIME="electron" RVERSION="3.0.0" ARCH="x64" DIST_URL=https://atom.io/download/atom-shell
+  - RUNTIME="electron" RVERSION="3.0.0" ARCH="ia32" DIST_URL=https://atom.io/download/atom-shell
+
+matrix:
+  include:
+  - osx_image: xcode7.3
+  exclude:
+  - osx_image: xcode7.3
+    env: RUNTIME="node" RVERSION="8.12.0" ARCH="x64"
+  - osx_image: xcode7.3
+    env: RUNTIME="node" RVERSION="8.12.0" ARCH="ia32"
+  - osx_image: xcode7.3
+    env: RUNTIME="node" RVERSION="9.11.2" ARCH="x64"
+  - osx_image: xcode7.3
+    env: RUNTIME="node" RVERSION="9.11.2" ARCH="ia32"
+  - osx_image: xcode7.3
+    env: RUNTIME="node" RVERSION="10.11.0" ARCH="x64"
+  - osx_image: xcode7.3
+    env: RUNTIME="node" RVERSION="10.11.0" ARCH="ia32"
+  - osx_image: xcode7.3
+    env: RUNTIME="electron" RVERSION="2.0.0" ARCH="x64"
+  - osx_image: xcode7.3
+    env: RUNTIME="electron" RVERSION="2.0.0" ARCH="ia32"
+  - osx_image: xcode7.3
+    env: RUNTIME="electron" RVERSION="3.0.0" ARCH="x64"
+  - osx_image: xcode7.3
+    env: RUNTIME="electron" RVERSION="3.0.0" ARCH="ia32"
+
+install:
+  - export NODE_VERSION=$RVERSION
+  - if [[ "$RUNTIME" == "electron" ]]; then export NODE_VERSION=10.11.0; fi
+  - nvm install $NODE_VERSION
+  - nvm use $NODE_VERSION
+  - yarn
+  # build from source
+  - yarn build:source
+
+script:
+  - PUBLISH_BINARY=false
+  # if we are building a tag then publish
+  - if [[ $TRAVIS_BRANCH == `git describe --tags --always HEAD` ]]; then PUBLISH_BINARY=true; fi;
+  # but not on xcode7.3
+  - if [[ "$TRAVIS_OSX_IMAGE" == "xcode7.3" ]]; then PUBLISH_BINARY=false; fi
+  - >
+    if [ "$PUBLISH_BINARY" == true ]; then
+      yarn global add node-pre-gyp node-pre-gyp-github@1.3.1
+      yarn build:source
+      node-pre-gyp configure --runtime=$RUNTIME --target=$RVERSION --target_arch=$ARCH --dist-url=$DIST_URL
+      node-pre-gyp build --runtime=$RUNTIME  --target=$RVERSION --target_arch=$ARCH --dist-url=$DIST_URL
+      node-pre-gyp package --runtime=$RUNTIME  --target=$RVERSION --target_arch=$ARCH --dist-url=$DIST_URL
+      node-pre-gyp-github publish
+    fi
