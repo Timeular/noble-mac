@@ -1,7 +1,7 @@
 {
   'targets': [
     {
-      'target_name': 'noble-mac-native',
+      'target_name': '<(module_name)',
       'sources': [ 'src/noble_mac.mm', 'src/napi_objc.mm', 'src/ble_manager.mm', 'src/objc_cpp.mm', 'src/callbacks.cc'  ],
       'include_dirs': ["<!@(node -p \"require('node-addon-api').include\")", "<!@(node -p \"require('napi-thread-safe-callback').include\")"],
       'dependencies': ["<!(node -p \"require('node-addon-api').gyp\")"],
@@ -22,18 +22,8 @@
       },
       'msvs_settings': {
         'VCCLCompilerTool': { 'ExceptionHandling': 1 },
-      }
-    },
-    {
-      "target_name": "action_after_build",
-      "type": "none",
-      "dependencies": [ "noble-mac-native" ],
-      "copies": [
-        {
-          "files": [ "<(PRODUCT_DIR)/noble-mac-native.node" ],
-          "destination": "build/<(CONFIGURATION_NAME)"
-        },
-      ]
+      },
+      'product_dir': '<(module_path)',
     }
   ]
 }
