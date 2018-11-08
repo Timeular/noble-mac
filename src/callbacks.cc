@@ -86,6 +86,7 @@ void Emit::Scan(const std::string& uuid, int rssi, const Peripheral& peripheral)
     auto serviceData = peripheral.serviceData;
     auto serviceUuids = peripheral.serviceUuids;
     mCallback->call([uuid, rssi, address, addressType, connectable, name, txPowerLevel, manufacturerData, serviceData, serviceUuids](Napi::Env env, std::vector<napi_value>& args) {
+        printf("disc: %s\n", uuid.c_str());
         Napi::Object advertisment = Napi::Object::New(env);
         advertisment.Set(_s("localName"), _s(name));
         advertisment.Set(_s("txPowerLevel"), txPowerLevel);

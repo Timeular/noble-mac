@@ -43,7 +43,7 @@
 
 - (void) centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
     std::string uuid = getUuid(peripheral);
-
+    printf("didD: %s\n", uuid.c_str());
     Peripheral p;
     p.address = getAddress(uuid, &p.addressType);
     IF(NSNumber*, connect, [advertisementData objectForKey:CBAdvertisementDataIsConnectable]) {
