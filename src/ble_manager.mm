@@ -26,9 +26,13 @@
     emit.RadioState(state);
 }
 
-- (void)scan: (NSArray<CBUUID *> *)serviceUUIDs allowDuplicates: (BOOL)allowDuplicates {
+- (void)scan: (NSArray<NSString*> *)serviceUUIDs allowDuplicates: (BOOL)allowDuplicates {
+    NSMutableArray* advServicesUuid = [NSMutableArray arrayWithCapacity:[serviceUUIDs count]];
+    [serviceUUIDs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [advServicesUuid addObject:[CBUUID UUIDWithString:obj]];
+    }];
     NSDictionary *options = @{CBCentralManagerScanOptionAllowDuplicatesKey:[NSNumber numberWithBool:allowDuplicates]};
-    [self.centralManager scanForPeripheralsWithServices:serviceUUIDs options:options];
+    [self.centralManager scanForPeripheralsWithServices:advServicesUuid options:options];
     emit.ScanState(true);
 }
 
