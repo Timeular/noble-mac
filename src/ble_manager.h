@@ -22,7 +22,7 @@
 @property NSMutableDictionary *peripherals;
 
 - (instancetype)init;
-- (void)scan: (NSArray<CBUUID *> *)serviceUUIDs allowDuplicates: (BOOL)allowDuplicates;
+- (void)scan: (NSArray<NSString*> *)serviceUUIDs allowDuplicates: (BOOL)allowDuplicates;
 - (void)stopScan;
 - (BOOL)connect:(NSString*) uuid;
 - (BOOL)disconnect:(NSString*) uuid;
