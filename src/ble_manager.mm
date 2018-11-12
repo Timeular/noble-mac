@@ -11,9 +11,11 @@
 #include "objc_cpp.h"
 
 @implementation BLEManager
-- (instancetype)init   {
+- (instancetype)init: (const Napi::Value&) receiver with: (const Napi::Function&) callback {
     if (self = [super init]) {
         pendingRead = false;
+        // wrap cb before creating the CentralManager as it may call didUpdateState immediately
+        self->emit.Wrap(receiver, callback);
         self.dispatchQueue = dispatch_queue_create("CBqueue", 0);
         self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:self.dispatchQueue];
         self.peripherals = [NSMutableDictionary dictionaryWithCapacity:10];
