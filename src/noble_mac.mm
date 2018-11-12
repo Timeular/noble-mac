@@ -47,8 +47,7 @@ NobleMac::NobleMac(const Napi::CallbackInfo& info) : ObjectWrap(info) {
 
 Napi::Value NobleMac::Init(const Napi::CallbackInfo& info) {
     Napi::Function emit = info.This().As<Napi::Object>().Get("emit").As<Napi::Function>();
-    manager = [[BLEManager alloc] init];
-    manager->emit.Wrap(info.This(), emit);
+    manager = [[BLEManager alloc] init:info.This() with:emit];
     return Napi::Value();
 }
 
