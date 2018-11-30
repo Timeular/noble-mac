@@ -14,6 +14,9 @@
         'OTHER_CFLAGS': [
             '-fobjc-arc',
         ],
+      'conditions': [
+        ['OS=="win"', {'sources/': [['exclude', 'src']]}]
+        ]
       },
       'link_settings': {
         'libraries': [
