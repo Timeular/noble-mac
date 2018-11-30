@@ -1,6 +1,5 @@
 {
   "name": "noble-mac",
-  "os": ["darwin"],
   "description": "Noble (Node.js Bluetooth LE) bindings using CoreBluetooth API",
   "version": "0.0.2",
   "author": "gv@timeular.com",
