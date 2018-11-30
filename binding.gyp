@@ -1,7 +1,7 @@
 {
   'targets' : [],
   'conditions': [
-    ['OS!="linux"', {
+    ['OS=="darwin"', {
   'targets': [
     {
       'target_name': '<(module_name)',
