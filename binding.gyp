@@ -17,7 +17,7 @@
           'OTHER_CFLAGS': [
               '-fobjc-arc',
           ],
-        }],
+        }]]],
       'link_settings': {
         'libraries': [
           '$(SDKROOT)/System/Library/Frameworks/CoreBluetooth.framework',
