@@ -91,17 +91,28 @@ void Emit::Scan(const std::string& uuid, int rssi, const Peripheral& peripheral)
             advertisment.Set(_s("localName"), _s(std::get<0>(name)));
         }
 
-        advertisment.Set(_s("txPowerLevel"), txPowerLevel);
-        advertisment.Set(_s("manufacturerData"), toBuffer(env, manufacturerData));
-        auto array = serviceData.empty() ? Napi::Array::New(env) : Napi::Array::New(env, serviceData.size());
-        for (size_t i = 0; i < serviceData.size(); i++) {
-            Napi::Object data = Napi::Object::New(env);
-            data.Set(_s("uuid"), _u(serviceData[i].first));
-            data.Set(_s("data"), toBuffer(env, serviceData[i].second));
-            array.Set(i, data);
+        if (std::get<1>(txPowerLevel)) {
+            advertisment.Set(_s("txPowerLevel"), std::get<0>(txPowerLevel));
         }
-        advertisment.Set(_s("serviceData"), array);
-        advertisment.Set(_s("serviceUuids"), toUuidArray(env, serviceUuids));
+
+        if (std::get<1>(manufacturerData)) {
+            advertisment.Set(_s("manufacturerData"), toBuffer(env, std::get<0>(manufacturerData)));
+        }
+
+        if (std::get<1>(serviceData)) {
+            auto array = std::get<0>(serviceData).empty() ? Napi::Array::New(env) : Napi::Array::New(env, std::get<0>(serviceData).size());
+            for (size_t i = 0; i < std::get<0>(serviceData).size(); i++) {
+                Napi::Object data = Napi::Object::New(env);
+                data.Set(_s("uuid"), _u(std::get<0>(serviceData)[i].first));
+                data.Set(_s("data"), toBuffer(env, std::get<0>(serviceData)[i].second));
+                array.Set(i, data);
+            }
+            advertisment.Set(_s("serviceData"), array);
+        }
+
+        if (std::get<1>(serviceUuids)) {
+            advertisment.Set(_s("serviceUuids"), toUuidArray(env, std::get<0>(serviceUuids)));
+        }
         // emit('discover', deviceUuid, address, addressType, connectable, advertisement, rssi);
         args = { _s("discover"), _u(uuid), _s(address), toAddressType(env, addressType), _b(connectable), advertisment, _n(rssi) };
     });

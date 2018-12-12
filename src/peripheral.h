@@ -16,8 +16,8 @@ public:
     AddressType addressType;
     bool connectable;
     std::pair<std::string, bool> name;
-    int txPowerLevel;
-    Data manufacturerData;
-    std::vector<std::pair<std::string, Data>> serviceData;
-    std::vector<std::string> serviceUuids;
+    std::pair<int, bool> txPowerLevel;
+    std::pair<Data, bool> manufacturerData;
+    std::pair<std::vector<std::pair<std::string, Data>>, bool> serviceData;
+    std::pair<std::vector<std::string>, bool> serviceUuids;
 };
