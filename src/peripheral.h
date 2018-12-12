@@ -15,7 +15,7 @@ public:
     std::string address;
     AddressType addressType;
     bool connectable;
-    std::string name;
+    std::pair<std::string, bool> name;
     int txPowerLevel;
     Data manufacturerData;
     std::vector<std::pair<std::string, Data>> serviceData;

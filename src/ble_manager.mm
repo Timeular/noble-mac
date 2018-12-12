@@ -52,11 +52,11 @@
         p.connectable = [connect boolValue];
     }
     IF(NSString*, dataLocalName, [advertisementData objectForKey:CBAdvertisementDataLocalNameKey]) {
-        p.name = [dataLocalName UTF8String];
+        p.name = std::make_pair([dataLocalName UTF8String], true);
     }
-    if(p.name.empty()) {
+    if(!std::get<1>(p.name)) {
         IF(NSString*, name, [peripheral name]) {
-            p.name = [name UTF8String];
+            p.name = std::make_pair([name UTF8String], true);
         }
     }
     IF(NSNumber*, txLevel, [advertisementData objectForKey:CBAdvertisementDataTxPowerLevelKey]) {
