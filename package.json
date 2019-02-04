@@ -12,6 +12,9 @@
   "engines": {
     "node": ">=6.14.2"
   },
+  "os": [
+    "darwin"
+  ],
   "dependencies": {
     "cross-spawn": "^6.0.5",
     "napi-thread-safe-callback": "0.0.6",
