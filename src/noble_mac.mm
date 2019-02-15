@@ -220,7 +220,7 @@ Napi::Value NobleMac::WriteHandle(const Napi::CallbackInfo& info) {
     return Napi::Value();
 }
 
-Napi::Value NobleMac::CleanUp(const Napi::CallbackInfo& info) {
+Napi::Value NobleMac::Stop(const Napi::CallbackInfo& info) {
     CHECK_MANAGER()
     CFRelease((__bridge CFTypeRef)manager);
     manager = nil;
@@ -244,9 +244,9 @@ Napi::Function NobleMac::GetClass(Napi::Env env) {
         NobleMac::InstanceMethod("discoverDescriptors", &NobleMac::DiscoverDescriptors),
         NobleMac::InstanceMethod("readValue", &NobleMac::ReadValue),
         NobleMac::InstanceMethod("writeValue", &NobleMac::WriteValue),
-        NobleMac::InstanceMethod("readHandle", &NobleMac::ReadValue),
-        NobleMac::InstanceMethod("writeHandle", &NobleMac::WriteValue),
-        NobleMac::InstanceMethod("cleanUp", &NobleMac::CleanUp),
+        NobleMac::InstanceMethod("readHandle", &NobleMac::ReadHandle),
+        NobleMac::InstanceMethod("writeHandle", &NobleMac::WriteHandle),
+        NobleMac::InstanceMethod("stop", &NobleMac::Stop),
     });
 }
 
