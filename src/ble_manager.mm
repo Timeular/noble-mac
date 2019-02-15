@@ -113,6 +113,7 @@
 }
 
 - (void) centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
+    [self.peripherals removeObjectForKey:peripheral.identifier.UUIDString];
     std::string uuid = getUuid(peripheral);
     emit.Connected(uuid, "connection failed");
 }
@@ -127,6 +128,7 @@
 
 -(void) centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
     std::string uuid = getUuid(peripheral);
+    [self.peripherals removeObjectForKey:peripheral.identifier.UUIDString];
     emit.Disconnected(uuid);
 }
 
