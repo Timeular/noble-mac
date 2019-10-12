@@ -14,15 +14,15 @@
 #include "callbacks.h"
 
 @interface BLEManager : NSObject <CBCentralManagerDelegate, CBPeripheralDelegate> {
-    @public Emit emit;
+    Emit emit;
     bool pendingRead;
 }
 @property (strong) CBCentralManager *centralManager;
 @property dispatch_queue_t dispatchQueue;
 @property NSMutableDictionary *peripherals;
 
-- (instancetype)init;
-- (void)scan: (NSArray<CBUUID *> *)serviceUUIDs allowDuplicates: (BOOL)allowDuplicates;
+- (instancetype)init: (const Napi::Value&) receiver with: (const Napi::Function&) callback;
+- (void)scan: (NSArray<NSString*> *)serviceUUIDs allowDuplicates: (BOOL)allowDuplicates;
 - (void)stopScan;
 - (BOOL)connect:(NSString*) uuid;
 - (BOOL)disconnect:(NSString*) uuid;

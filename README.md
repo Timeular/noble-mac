@@ -16,6 +16,15 @@ This package provides the same functionality as the regular noble mac bindings u
 ### OS X
  * install [Xcode](https://itunes.apple.com/ca/app/xcode/id497799835?mt=12)
 
+## Installation
+Currently, it has not been published yet on `npm`, so please try to add the dependence as the following.
+```json
+"dependencies": {
+    "noble-mac": "https://github.com/Timeular/noble-mac.git"
+}
+```
+Then, please run `npm install` again.
+
 ## Usage
 Simply require `noble-mac` instead of `noble`:
 ```javascript

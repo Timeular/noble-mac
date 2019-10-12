@@ -11,9 +11,11 @@
 #include "objc_cpp.h"
 
 @implementation BLEManager
-- (instancetype)init   {
+- (instancetype)init: (const Napi::Value&) receiver with: (const Napi::Function&) callback {
     if (self = [super init]) {
         pendingRead = false;
+        // wrap cb before creating the CentralManager as it may call didUpdateState immediately
+        self->emit.Wrap(receiver, callback);
         self.dispatchQueue = dispatch_queue_create("CBqueue", 0);
         self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:self.dispatchQueue];
         self.peripherals = [NSMutableDictionary dictionaryWithCapacity:10];
@@ -26,9 +28,13 @@
     emit.RadioState(state);
 }
 
-- (void)scan: (NSArray<CBUUID *> *)serviceUUIDs allowDuplicates: (BOOL)allowDuplicates {
+- (void)scan: (NSArray<NSString*> *)serviceUUIDs allowDuplicates: (BOOL)allowDuplicates {
+    NSMutableArray* advServicesUuid = [NSMutableArray arrayWithCapacity:[serviceUUIDs count]];
+    [serviceUUIDs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [advServicesUuid addObject:[CBUUID UUIDWithString:obj]];
+    }];
     NSDictionary *options = @{CBCentralManagerScanOptionAllowDuplicatesKey:[NSNumber numberWithBool:allowDuplicates]};
-    [self.centralManager scanForPeripheralsWithServices:serviceUUIDs options:options];
+    [self.centralManager scanForPeripheralsWithServices:advServicesUuid options:options];
     emit.ScanState(true);
 }
 
@@ -46,19 +52,20 @@
         p.connectable = [connect boolValue];
     }
     IF(NSString*, dataLocalName, [advertisementData objectForKey:CBAdvertisementDataLocalNameKey]) {
-        p.name = [dataLocalName UTF8String];
+        p.name = std::make_pair([dataLocalName UTF8String], true);
     }
-    if(p.name.empty()) {
+    if(!std::get<1>(p.name)) {
         IF(NSString*, name, [peripheral name]) {
-            p.name = [name UTF8String];
+            p.name = std::make_pair([name UTF8String], true);
         }
     }
     IF(NSNumber*, txLevel, [advertisementData objectForKey:CBAdvertisementDataTxPowerLevelKey]) {
-        p.txPowerLevel = [txLevel intValue];
+        p.txPowerLevel = std::make_pair([txLevel intValue], true);
     }
     IF(NSData*, data, [advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey]) {
         const UInt8* bytes = (UInt8 *)[data bytes];
-        p.manufacturerData.assign(bytes, bytes+[data length]);
+        std::get<0>(p.manufacturerData).assign(bytes, bytes+[data length]);
+        std::get<1>(p.manufacturerData) = true;
     }
     IF(NSDictionary*, dictionary, [advertisementData objectForKey:CBAdvertisementDataServiceDataKey]) {
         for (CBUUID* key in dictionary) {
@@ -67,14 +74,16 @@
                 Data sData;
                 const UInt8* bytes = (UInt8 *)[value bytes];
                 sData.assign(bytes, bytes+[value length]);
-                p.serviceData.push_back(std::make_pair(serviceUuid, sData));
+                std::get<0>(p.serviceData).push_back(std::make_pair(serviceUuid, sData));
             }
         }
+        std::get<1>(p.serviceData) = true;
     }
     IF(NSArray*, services, [advertisementData objectForKey:CBAdvertisementDataServiceUUIDsKey]) {
         for (CBUUID* service in services) {
-            p.serviceUuids.push_back([[service UUIDString] UTF8String]);
+            std::get<0>(p.serviceUuids).push_back([[service UUIDString] UTF8String]);
         }
+        std::get<1>(p.serviceUuids) = true;
     }
 
     int rssi = [RSSI intValue];
@@ -104,6 +113,7 @@
 }
 
 - (void) centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
+    [self.peripherals removeObjectForKey:peripheral.identifier.UUIDString];
     std::string uuid = getUuid(peripheral);
     emit.Connected(uuid, "connection failed");
 }
@@ -118,6 +128,7 @@
 
 -(void) centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
     std::string uuid = getUuid(peripheral);
+    [self.peripherals removeObjectForKey:peripheral.identifier.UUIDString];
     emit.Disconnected(uuid);
 }
 
