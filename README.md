@@ -1,4 +1,8 @@
+
+> Note: this project was integrated in [@abandonware/noble](https://github.com/abandonware/noble) and is no longer actively maintained
+
 # Noble (Node.js Bluetooth LE) for MacOS
+
 [![Build Status](https://travis-ci.com/Timeular/noble-mac.svg?branch=master)](https://travis-ci.com/Timeular/noble-mac)
 
 _The mac bindings in the [`noble`](https://github.com/sandeepmistry/noble) repository use a XPC connection and an undocumented protocol to communicate directly with the bluetooth daemon.
@@ -15,6 +19,15 @@ This package provides the same functionality as the regular noble mac bindings u
 
 ### OS X
  * install [Xcode](https://itunes.apple.com/ca/app/xcode/id497799835?mt=12)
+
+## Installation
+Currently, it has not been published yet on `npm`, so please try to add the dependence as the following.
+```json
+"dependencies": {
+    "noble-mac": "https://github.com/Timeular/noble-mac.git"
+}
+```
+Then, please run `npm install` again.
 
 ## Usage
 Simply require `noble-mac` instead of `noble`:

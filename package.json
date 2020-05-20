@@ -1,7 +1,7 @@
 {
   "name": "noble-mac",
   "description": "Noble (Node.js Bluetooth LE) bindings using CoreBluetooth API",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "author": "gv@timeular.com",
   "license": "MIT",
   "repository": {
