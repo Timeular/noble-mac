@@ -1,7 +1,7 @@
 {
   'targets' : [{'target_name': "BLANK"}],
   'conditions': [
-    ['OS=="darwin"', {
+    ['OS=="mac"', {
   'targets': [
     {
       'target_name': '<(module_name)',
