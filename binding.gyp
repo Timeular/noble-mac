@@ -1,4 +1,7 @@
 {
+  'targets' : [{'target_name': "BLANK"}],
+  'conditions': [
+    ['OS=="mac"', {
   'targets': [
     {
       'target_name': '<(module_name)',
@@ -26,4 +29,5 @@
       'product_dir': '<(module_path)',
     }
   ]
+  }]]
 }
